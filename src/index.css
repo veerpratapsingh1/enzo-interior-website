@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand Colors */
+    --background: 40 33% 97%;         /* #F8F6F2 off-white */
+    --foreground: 0 13% 20%;          /* #3A2F2F dark brown */
+
+    --card: 36 47% 93%;               /* #EFE7DA cream */
+    --card-foreground: 0 13% 20%;
+
+    --popover: 40 33% 97%;
+    --popover-foreground: 0 13% 20%;
+
+    --primary: 42 55% 53%;            /* #C9A646 soft gold */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 33 42% 85%;          /* #E8DCC8 light beige */
+    --secondary-foreground: 0 13% 20%;
+
+    --muted: 33 42% 88%;
+    --muted-foreground: 0 5% 40%;
+
+    --accent: 42 55% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 33 30% 83%;
+    --input: 33 30% 83%;
+    --ring: 42 55% 53%;
+
+    --radius: 0.75rem;
+
+    /* Custom brand tokens */
+    --cream: 36 47% 93%;
+    --beige: 33 42% 85%;
+    --gold: 42 55% 53%;
+    --gold-dark: 42 55% 43%;
+    --gold-light: 42 55% 68%;
+    --brown: 0 13% 20%;
+    --charcoal: 0 0% 20%;
+
+    --gradient-gold: linear-gradient(135deg, hsl(42 55% 53%), hsl(42 65% 65%), hsl(42 55% 43%));
+    --gradient-hero: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.65) 100%);
+    --shadow-luxury: 0 8px 32px -8px hsl(42 55% 53% / 0.25);
+    --shadow-card: 0 4px 24px -4px rgba(58, 47, 47, 0.12);
+
+    --sidebar-background: 40 33% 97%;
+    --sidebar-foreground: 0 13% 20%;
+    --sidebar-primary: 42 55% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 33 42% 85%;
+    --sidebar-accent-foreground: 0 13% 20%;
+    --sidebar-border: 33 30% 83%;
+    --sidebar-ring: 42 55% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-gold {
+    @apply inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-sm tracking-wider transition-all duration-300;
+    background: var(--gradient-gold);
+    color: white;
+    box-shadow: var(--shadow-luxury);
+  }
+  .btn-gold:hover {
+    background: hsl(var(--gold-dark));
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px -8px hsl(42 55% 43% / 0.45);
+  }
+
+  .btn-outline-gold {
+    @apply inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-sm tracking-wider transition-all duration-300 border-2;
+    border-color: hsl(var(--gold));
+    color: hsl(var(--gold));
+    background: transparent;
+  }
+  .btn-outline-gold:hover {
+    background: hsl(var(--gold));
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-3;
+    font-family: 'Montserrat', sans-serif;
+    color: hsl(var(--brown));
+  }
+
+  .section-subtitle {
+    @apply text-base font-medium tracking-widest uppercase mb-4;
+    color: hsl(var(--gold));
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .gold-divider {
+    @apply w-16 h-1 mx-auto mb-8 rounded-full;
+    background: var(--gradient-gold);
+  }
+
+  .card-luxury {
+    @apply rounded-2xl overflow-hidden transition-all duration-300;
+    background: hsl(var(--card));
+    box-shadow: var(--shadow-card);
+  }
+  .card-luxury:hover {
+    box-shadow: var(--shadow-luxury);
+    transform: translateY(-4px);
+  }
+}
+
+/* Scroll fade-in animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.gold-shimmer {
+  background: linear-gradient(90deg, hsl(42 55% 53%), hsl(42 65% 72%), hsl(42 55% 53%));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
