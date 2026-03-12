@@ -50,7 +50,7 @@ async function postContact(form: FormState): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(form),
-    signal: AbortSignal.timeout(15_000),
+    signal: AbortSignal.timeout(30_000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
