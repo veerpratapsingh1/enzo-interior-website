@@ -3,8 +3,16 @@ import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
 
 export default function Contact() {
   const ref = useRef<HTMLDivElement>(null);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
+
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -18,33 +26,42 @@ export default function Contact() {
       },
       { threshold: 0.1 }
     );
+
     const els = ref.current?.querySelectorAll(".reveal");
     els?.forEach((el) => observer.observe(el));
+
     return () => observer.disconnect();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          message: form.message,
-        }),
-      });
+      const res = await fetch(
+        "https://backend-enzo-modular.onrender.com/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            message: form.message,
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Server response error");
+      }
 
       const data = await res.json();
 
       if (data.success) {
-
-        // form reset
         setForm({
           name: "",
           phone: "",
@@ -52,24 +69,22 @@ export default function Contact() {
           message: "",
         });
 
-        // 2 sec delay popup
         setTimeout(() => {
           setSent(true);
         }, 2000);
 
-        // auto close popup
         setTimeout(() => {
           setSent(false);
         }, 6000);
-
       } else {
         alert("Mail failed");
       }
-
     } catch (err) {
       console.log(err);
       alert("Server error");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -92,44 +107,80 @@ export default function Contact() {
               className="rounded-2xl p-8"
               style={{ background: "hsl(var(--card))", boxShadow: "var(--shadow-card)" }}
             >
-              <h3 className="font-montserrat font-bold text-xl mb-1" style={{ color: "hsl(var(--brown))" }}>
+              <h3
+                className="font-montserrat font-bold text-xl mb-1"
+                style={{ color: "hsl(var(--brown))" }}
+              >
                 Mamta Singh
               </h3>
-              <p className="font-poppins text-sm text-muted-foreground mb-6">Principal Designer</p>
+
+              <p className="font-poppins text-sm text-muted-foreground mb-6">
+                Principal Designer
+              </p>
 
               <div className="space-y-4">
                 <a href="tel:7066280920" className="flex items-center gap-4 group">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.12)" }}>
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ background: "hsl(var(--gold) / 0.12)" }}
+                  >
                     <Phone size={18} style={{ color: "hsl(var(--gold))" }} />
                   </div>
+
                   <div>
-                    <p className="font-poppins text-xs text-muted-foreground">Call / WhatsApp</p>
-                    <p className="font-poppins text-sm font-medium" style={{ color: "hsl(var(--brown))" }}>
+                    <p className="font-poppins text-xs text-muted-foreground">
+                      Call / WhatsApp
+                    </p>
+                    <p
+                      className="font-poppins text-sm font-medium"
+                      style={{ color: "hsl(var(--brown))" }}
+                    >
                       +91 7066280920 / 8850644199
                     </p>
                   </div>
                 </a>
 
-                <a href="mailto:enzomodularinteriors@gmail.com" className="flex items-center gap-4 group">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.12)" }}>
+                <a
+                  href="mailto:enzomodularinteriors@gmail.com"
+                  className="flex items-center gap-4 group"
+                >
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ background: "hsl(var(--gold) / 0.12)" }}
+                  >
                     <Mail size={18} style={{ color: "hsl(var(--gold))" }} />
                   </div>
+
                   <div>
                     <p className="font-poppins text-xs text-muted-foreground">Email</p>
-                    <p className="font-poppins text-sm font-medium" style={{ color: "hsl(var(--brown))" }}>
+                    <p
+                      className="font-poppins text-sm font-medium"
+                      style={{ color: "hsl(var(--brown))" }}
+                    >
                       enzomodularinteriors@gmail.com
                     </p>
                   </div>
                 </a>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "hsl(var(--gold) / 0.12)" }}>
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "hsl(var(--gold) / 0.12)" }}
+                  >
                     <MapPin size={18} style={{ color: "hsl(var(--gold))" }} />
                   </div>
+
                   <div>
-                    <p className="font-poppins text-xs text-muted-foreground">Address</p>
-                    <p className="font-poppins text-sm font-medium leading-relaxed" style={{ color: "hsl(var(--brown))" }}>
-                      Shop No. 3, Indumati Building, Ambadi Road,<br />
+                    <p className="font-poppins text-xs text-muted-foreground">
+                      Address
+                    </p>
+
+                    <p
+                      className="font-poppins text-sm font-medium leading-relaxed"
+                      style={{ color: "hsl(var(--brown))" }}
+                    >
+                      Shop No. 3, Indumati Building, Ambadi Road,
+                      <br />
                       Near Jain Mandir, Vasai (W), Maharashtra
                     </p>
                   </div>
@@ -141,12 +192,21 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.12)" }}>
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ background: "hsl(var(--gold) / 0.12)" }}
+                  >
                     <Instagram size={18} style={{ color: "hsl(var(--gold))" }} />
                   </div>
+
                   <div>
-                    <p className="font-poppins text-xs text-muted-foreground">Instagram</p>
-                    <p className="font-poppins text-sm font-medium" style={{ color: "hsl(var(--brown))" }}>
+                    <p className="font-poppins text-xs text-muted-foreground">
+                      Instagram
+                    </p>
+                    <p
+                      className="font-poppins text-sm font-medium"
+                      style={{ color: "hsl(var(--brown))" }}
+                    >
                       @enzo_modular_interiors
                     </p>
                   </div>
@@ -155,7 +215,10 @@ export default function Contact() {
             </div>
 
             {/* Map */}
-            <div className="rounded-2xl overflow-hidden" style={{ boxShadow: "var(--shadow-card)", height: "240px" }}>
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ boxShadow: "var(--shadow-card)", height: "240px" }}
+            >
               <iframe
                 title="Enzo Modular Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.1!2d72.8286!3d19.3606!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7a8b4a12cd345%3A0x1!2sAmbadi+Road%2C+Vasai+West%2C+Maharashtra!5e0!3m2!1sen!2sin!4v1"
@@ -175,57 +238,56 @@ export default function Contact() {
               className="rounded-2xl p-8 space-y-5"
               style={{ background: "hsl(var(--card))", boxShadow: "var(--shadow-card)" }}
             >
-              <h3 className="font-montserrat font-bold text-xl mb-6" style={{ color: "hsl(var(--brown))" }}>
+              <h3
+                className="font-montserrat font-bold text-xl mb-6"
+                style={{ color: "hsl(var(--brown))" }}
+              >
                 Schedule a Free Home Visit
               </h3>
 
-              <div>
-                <label className="font-poppins text-xs text-muted-foreground mb-1.5 block">Your Name</label>
-                <input
-                  required
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full rounded-xl px-4 py-3 text-sm font-poppins border border-border focus:outline-none focus:border-gold/60 bg-background transition-colors"
-                />
-              </div>
+              <input
+                required
+                type="text"
+                placeholder="Your Name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full rounded-xl px-4 py-3 text-sm border"
+              />
 
-              <div>
-                <label className="font-poppins text-xs text-muted-foreground mb-1.5 block">Phone Number</label>
-                <input
-                  required
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full rounded-xl px-4 py-3 text-sm font-poppins border border-border focus:outline-none focus:border-gold/60 bg-background transition-colors"
-                />
-              </div>
+              <input
+                required
+                type="tel"
+                placeholder="Phone Number"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                className="w-full rounded-xl px-4 py-3 text-sm border"
+              />
 
-              <div>
-                <label className="font-poppins text-xs text-muted-foreground mb-1.5 block">Email</label>
-                <input
-                  required
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full rounded-xl px-4 py-3 text-sm font-poppins border border-border focus:outline-none focus:border-gold/60 bg-background transition-colors"
-                />
-              </div>
+              <input
+                required
+                type="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full rounded-xl px-4 py-3 text-sm border"
+              />
 
-              <div>
-                <label className="font-poppins text-xs text-muted-foreground mb-1.5 block">Message</label>
-                <textarea
-                  required
-                  rows={4}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full rounded-xl px-4 py-3 text-sm font-poppins border border-border focus:outline-none focus:border-gold/60 bg-background transition-colors resize-none"
-                />
-              </div>
+              <textarea
+                required
+                rows={4}
+                placeholder="Message"
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className="w-full rounded-xl px-4 py-3 text-sm border resize-none"
+              />
 
-              <button type="submit" className="btn-gold w-full flex items-center justify-center gap-2 py-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-gold w-full flex items-center justify-center gap-2 py-4"
+              >
                 <Send size={16} />
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
